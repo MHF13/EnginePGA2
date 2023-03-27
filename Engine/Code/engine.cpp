@@ -30,10 +30,10 @@ GLuint CreateProgramFromSource(String programSource, const char* shaderName)
         programSource.str
     };
     const GLint vertexShaderLengths[] = {
-        (GLint) strlen(versionString),
-        (GLint) strlen(shaderNameDefine),
-        (GLint) strlen(vertexShaderDefine),
-        (GLint) programSource.len
+        (GLint)strlen(versionString),
+        (GLint)strlen(shaderNameDefine),
+        (GLint)strlen(vertexShaderDefine),
+        (GLint)programSource.len
     };
     const GLchar* fragmentShaderSource[] = {
         versionString,
@@ -42,10 +42,10 @@ GLuint CreateProgramFromSource(String programSource, const char* shaderName)
         programSource.str
     };
     const GLint fragmentShaderLengths[] = {
-        (GLint) strlen(versionString),
-        (GLint) strlen(shaderNameDefine),
-        (GLint) strlen(fragmentShaderDefine),
-        (GLint) programSource.len
+        (GLint)strlen(versionString),
+        (GLint)strlen(shaderNameDefine),
+        (GLint)strlen(fragmentShaderDefine),
+        (GLint)programSource.len
     };
 
     GLuint vshader = glCreateShader(GL_VERTEX_SHADER);
@@ -127,14 +127,14 @@ void FreeImage(Image image)
 GLuint CreateTexture2DFromImage(Image image)
 {
     GLenum internalFormat = GL_RGB8;
-    GLenum dataFormat     = GL_RGB;
-    GLenum dataType       = GL_UNSIGNED_BYTE;
+    GLenum dataFormat = GL_RGB;
+    GLenum dataType = GL_UNSIGNED_BYTE;
 
     switch (image.nchannels)
     {
-        case 3: dataFormat = GL_RGB; internalFormat = GL_RGB8; break;
-        case 4: dataFormat = GL_RGBA; internalFormat = GL_RGBA8; break;
-        default: ELOG("LoadTexture2D() - Unsupported number of channels");
+    case 3: dataFormat = GL_RGB; internalFormat = GL_RGB8; break;
+    case 4: dataFormat = GL_RGBA; internalFormat = GL_RGBA8; break;
+    default: ELOG("LoadTexture2D() - Unsupported number of channels");
     }
 
     GLuint texHandle;
@@ -187,40 +187,119 @@ void Init(App* app)
     // - programs (and retrieve uniform indices)
     // - textures
 
+    glGenBuffers(1, &app->embeddedVertices);
+    glBindBuffer(GL_ARRAY_BUFFER, app->embeddedVertices);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glGenBuffers(1, &app->embeddedElements);
+    glBindBuffer(GL_ARRAY_BUFFER, app->embeddedElements);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glGenVertexArrays(1, &app->vao);
+    glBindVertexArray(app->vao);
+    glBindBuffer(GL_ARRAY_BUFFER, app->embeddedVertices);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexV3V2), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexV3V2), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, app->embeddedElements);
+    glBindVertexArray(0);
+
+    app->texturedGeometryProgramIdx = LoadProgram(app, "shaders.glsl", "TEXTURED_GEOMETRY");
+    Program& texturedGeometryProgran = app->programs[app->texturedGeometryProgramIdx];
+    app->programUniformTexture = glGetUniformLocation(texturedGeometryProgran.handle, "uTexture");
+
+    app->diceTexIdx = LoadTexture2D(app,"dice.png");
+    app->whiteTexIdx = LoadTexture2D(app,"colo_white.png");
+    app->blackTexIdx = LoadTexture2D(app,"colo_black.png");
+    app->normalTexIdx = LoadTexture2D(app,"colo_normal.png");
+    app->magentaTexIdx = LoadTexture2D(app,"colo_magenta.png");
+
+    app->glInfo.glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
+    app->glInfo.glRender = reinterpret_cast<const char*>(glGetString(GL_RENDER));
+    app->glInfo.glVendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
+    app->glInfo.glShaderVersion = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+    GLint numExtensions = 0;
+
+    glGetIntegerv(GL_NUM_EXTENSIONS, &numExtensions);
+
+    for (GLint i = 0; i < numExtensions; ++i)
+    {
+        app->glInfo.glExtensions.push_back(reinterpret_cast<const char*>(glGetStringi(GL_EXTENSIONS, GLuint(i))));
+    }
+
     app->mode = Mode_TexturedQuad;
 }
 
 void Gui(App* app)
 {
     ImGui::Begin("Info");
-    ImGui::Text("FPS: %f", 1.0f/app->deltaTime);
+    ImGui::Text("FPS: %f", 1.0f / app->deltaTime);
     ImGui::End();
+
+    if (app->input.keys[Key::K_SPACE] == ButtonState::BUTTON_PRESS)
+    {
+        ImGui::OpenPopup("OpenGL Info");
+    }
+
+    if (ImGui::BeginPopup("OpenGL Info"))
+    {
+        ImGui::Text("%s", app->glInfo.glVersion.c_str());
+        ImGui::Text("%s", app->glInfo.glRender.c_str());
+        ImGui::Text("%s", app->glInfo.glVendor.c_str());
+        ImGui::Text("%s", app->glInfo.glShaderVersion.c_str());
+
+        ImGui::Separator();
+        ImGui::Text("Extension");
+        for (size_t i = 0; i < app->glInfo.glExtensions.size(); ++i)
+        {
+            ImGui::Text("%s", app->glInfo.glExtensions[i].c_str());
+        }
+
+        ImGui::EndPopup();
+
+    }
+
 }
 
 void Update(App* app)
 {
     // You can handle app->input keyboard/mouse here
+
+
+
 }
 
 void Render(App* app)
 {
     switch (app->mode)
     {
-        case Mode_TexturedQuad:
-            {
-                // TODO: Draw your textured quad here!
-                // - clear the framebuffer
-                // - set the viewport
-                // - set the blending state
-                // - bind the texture into unit 0
-                // - bind the program 
-                //   (...and make its texture sample from unit 0)
-                // - bind the vao
-                // - glDrawElements() !!!
-            }
-            break;
+    case Mode_TexturedQuad:
+    {
+        // TODO: Draw your textured quad here!
+        // - clear the framebuffer
+        // - set the viewport
+        // - set the blending state
+        // - bind the texture into unit 0
+        // - bind the program 
+        //   (...and make its texture sample from unit 0)
+        // - bind the vao
+        // - glDrawElements() !!!
 
-        default:;
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        //TODO (pagina 24 powerpoint 1)
+
+    }
+    break;
+
+    default:;
     }
 }
 
