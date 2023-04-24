@@ -212,7 +212,7 @@ void Init(App* app)
     app->texturedGeometryProgramIdx = LoadProgram(app, "shaders.glsl", "TEXTURED_GEOMETRY");
     Program& texturedGeometryProgran = app->programs[app->texturedGeometryProgramIdx];
     app->programUniformTexture = glGetUniformLocation(texturedGeometryProgran.handle, "uTexture");
-
+    
     app->diceTexIdx = LoadTexture2D(app,"dice.png");
     app->whiteTexIdx = LoadTexture2D(app,"colo_white.png");
     app->blackTexIdx = LoadTexture2D(app,"colo_black.png");
@@ -223,6 +223,13 @@ void Init(App* app)
     app->glInfo.glRender = reinterpret_cast<const char*>(glGetString(GL_RENDER));
     app->glInfo.glVendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
     app->glInfo.glShaderVersion = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+    //---
+    app->texturedMeshProgramIdx = LoadProgram(app,"shader.glsl","SHOW_TEXTURED_MESH");
+    Program& textureMeshProgram = app->programs[app->texturedMeshProgramIdx];
+    textureMeshProgram.vertexInputLayout.attributes.push_back({0,3});
+    textureMeshProgram.vertexInputLayout.attributes.push_back({2,2});
+    
 
     GLint numExtensions = 0;
 
@@ -294,12 +301,32 @@ void Render(App* app)
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //TODO (pagina 24 powerpoint 1)
+        glViewport(0,0,app->displaySize.x,app->displaySize.y);
+
+        Program& programaTextureGeometry = app->programs[app->texturedGeometryProgramIdx];
+        glUseProgram(programaTextureGeometry.handle);
+        glBindVertexArray(app->vao);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+        glUniform1i(app->programUniformTexture,0);
+        glActiveTexture(GL_TEXTURE0);
+        GLuint textureHande = app->textures[app->diceTexIdx].handle;
+        glBindTexture(GL_TEXTURE_2D,textureHande);
+
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+
+        glBindVertexArray(0);
+        glUseProgram(0);
 
     }
     break;
 
     default:;
     }
+
+    //Model Importer
+    
 }
 

@@ -6,6 +6,20 @@
 #pragma once
 
 #define _CRT_SECURE_NO_WARNINGS
+#define ELOG(...) ILOG(__VA_ARGS__)
+
+#define ARRAY_COUNT(array) (sizeof(array)/sizeof(array[0]))
+
+#define ASSERT(condition, message) assert((condition) && message)
+
+#define KB(count) (1024*(count))
+#define MB(count) (1024*KB(count))
+#define GB(count) (1024*MB(count))
+
+#define PI  3.14159265359f
+#define TAU 6.28318530718f
+
+
 #include <stdio.h>
 #include <assert.h>
 #include <math.h>
@@ -94,16 +108,5 @@ sprintf(logBuffer, __VA_ARGS__);  \
 LogString(logBuffer);             \
 }
 
-#define ELOG(...) ILOG(__VA_ARGS__)
 
-#define ARRAY_COUNT(array) (sizeof(array)/sizeof(array[0]))
-
-#define ASSERT(condition, message) assert((condition) && message)
-
-#define KB(count) (1024*(count))
-#define MB(count) (1024*KB(count))
-#define GB(count) (1024*MB(count))
-
-#define PI  3.14159265359f
-#define TAU 6.28318530718f
 
