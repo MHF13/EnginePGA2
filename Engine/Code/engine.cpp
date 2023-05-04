@@ -79,6 +79,15 @@ GLuint CreateProgramFromSource(String programSource, const char* shaderName)
         ELOG("glLinkProgram() failed with program %s\nReported message:\n%s\n", shaderName, infoLogBuffer);
     }
 
+    
+    //---------- TODO 3-11
+    Program program;
+    program.handle = programHandle;
+    glGetProgramiv(programHandle, GL_ACTIVE_ATTRIBUTES, &program.attributeCount);
+
+    glGetActiveAttrib(program.handle,);
+
+    //----------
     glUseProgram(0);
 
     glDetachShader(programHandle, vshader);

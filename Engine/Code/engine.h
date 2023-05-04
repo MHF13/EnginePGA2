@@ -70,7 +70,7 @@ struct Program
     std::string        programName;
     u64                lastWriteTimestamp; // What is this for?
     VertexShaderLayout vertexInputLayout;
-    GLsizei length;
+    GLsizei attributeCount;
 };
 
 enum Mode
