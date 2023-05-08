@@ -79,15 +79,6 @@ GLuint CreateProgramFromSource(String programSource, const char* shaderName)
         ELOG("glLinkProgram() failed with program %s\nReported message:\n%s\n", shaderName, infoLogBuffer);
     }
 
-    
-    //---------- TODO 3-11
-    Program program;
-    program.handle = programHandle;
-    glGetProgramiv(programHandle, GL_ACTIVE_ATTRIBUTES, &program.attributeCount);
-
-    glGetActiveAttrib(program.handle,);
-
-    //----------
     glUseProgram(0);
 
     glDetachShader(programHandle, vshader);
@@ -108,6 +99,25 @@ u32 LoadProgram(App* app, const char* filepath, const char* programName)
     program.programName = programName;
     program.lastWriteTimestamp = GetFileLastWriteTimestamp(filepath);
     app->programs.push_back(program);
+    
+    //---------- TODO 3-11
+    glGetProgramiv(program.handle, GL_ACTIVE_ATTRIBUTES, &program.attributeCount);
+
+    for (int i = 0; i < program.attributeCount; i++)
+    {
+        glGetActiveAttrib(program.handle, i, ARRAY_COUNT(program.vertexInputLayout.attributes[i].attributeName),
+            &program.vertexInputLayout.attributes[i].attributeNameLength,
+            &program.vertexInputLayout.attributes[i].attributeSize,
+            &program.vertexInputLayout.attributes[i].attributeType,
+            &program.vertexInputLayout.attributes[i].attributeName);
+
+        program.vertexInputLayout.attributes[i].location = glGetAttribLocation(program.handle, program.)
+
+    }
+
+
+    //----------
+
 
     return app->programs.size() - 1;
 }

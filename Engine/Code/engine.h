@@ -96,7 +96,12 @@ struct VertexBufferLayout
 // Shader
 struct VertexShaderAttribute
 {
-    u8 location;
+    std::string attributeName;
+    GLsizei attributeNameLength;
+    GLuint attributeSize;
+    GLenum attributeType;
+
+    u8 attributeLocation;
     u8 componentCount;
 };
 
