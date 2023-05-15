@@ -103,9 +103,9 @@ u32 LoadProgram(App* app, const char* filepath, const char* programName)
     //---------- TODO 3-11
     glGetProgramiv(program.handle, GL_ACTIVE_ATTRIBUTES, &program.attributeCount);
 
-    for (int i = 0; i < program.attributeCount; i++)
+    /*for (int i = 0; i < program.attributeCount; i++)
     {
-        glGetActiveAttrib(program.handle, i, ARRAY_COUNT(program.vertexInputLayout.attributes[i].attributeName),
+        glGetActiveAttrib(program.handle, i, ARRAY_COUNT(program.vertexInputLayout.attributes[i].attributeNam),
             &program.vertexInputLayout.attributes[i].attributeNameLength,
             &program.vertexInputLayout.attributes[i].attributeSize,
             &program.vertexInputLayout.attributes[i].attributeType,
@@ -113,7 +113,7 @@ u32 LoadProgram(App* app, const char* filepath, const char* programName)
 
         program.vertexInputLayout.attributes[i].location = glGetAttribLocation(program.handle, program.)
 
-    }
+    }*/
 
 
     //----------
@@ -197,6 +197,58 @@ u32 LoadTexture2D(App* app, const char* filepath)
     }
 }
 
+
+// diapo 3 - 19
+GLuint FindVAO(Mesh& mesh,u32 submeshIndex, const Program& program) {
+    Submesh& submesh = mesh.submeshes[submeshIndex];
+
+    // Try finding a vao for this submesh/program
+    for (u32 i = 0; i < (u32)submesh.vaos.size(); ++i) {
+        if (submesh.vaos[i].programHandle == program.handle)
+            return submesh.vaos[i].handle;
+    }
+
+    GLuint vaoHandle = 0;
+    //Crate a new vao for this submesh/program
+    {
+        glGenVertexArrays(1,&vaoHandle);
+        glBindVertexArray(vaoHandle);
+
+        glBindBuffer(GL_ARRAY_BUFFER, mesh.vertexBufferHandle);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.indexBufferHandle);
+
+        // We have to link all vertex inputs attributes to attributes in the vertex buffer
+        for (u32 i = 0; i < program.vertexInputLayout.attributes.size(); ++i)
+        {
+            bool attributeWasLinked = false;
+
+            for (u32 j = 0; j < submesh.vertexBufferLayout.attributes.size(); ++j)
+            {
+                if (program.vertexInputLayout.attributes[i].attributeLocation == submesh.vertexBufferLayout.attributes[i].location)
+                {
+                    const u32 index = submesh.vertexBufferLayout.attributes[j].location;
+                    const u32 ncomp = submesh.vertexBufferLayout.attributes[j].componentCount;
+                    const u32 offset = submesh.vertexBufferLayout.attributes[j].offset + submesh.vertexOffset;
+                    const u32 stride = submesh.vertexBufferLayout.stride;
+                    glVertexAttribPointer(index,ncomp,GL_FLOAT,GL_FALSE, stride, (void*)(u64)offset);
+                    glEnableVertexAttribArray(index);
+
+                    attributeWasLinked = true;
+                    break;
+                }
+            }
+
+            assert(attributeWasLinked);
+        }
+        glBindVertexArray(0);
+    }
+
+    Vao vao = { vaoHandle,program.handle };
+    submesh.vaos.push_back(vao);
+
+    return vaoHandle;
+}
+
 void Init(App* app)
 {
     // TODO: Initialize your resources here!
@@ -232,11 +284,13 @@ void Init(App* app)
     Program& texturedGeometryProgran = app->programs[app->texturedGeometryProgramIdx];
     app->programUniformTexture = glGetUniformLocation(texturedGeometryProgran.handle, "uTexture");
     
-    app->diceTexIdx = LoadTexture2D(app,"dice.png");
+    app->Patrick = LoadModel(app,"Patrick/Patrick.obj");
+
+    /*app->diceTexIdx = LoadTexture2D(app, "dice.png");
     app->whiteTexIdx = LoadTexture2D(app,"colo_white.png");
     app->blackTexIdx = LoadTexture2D(app,"colo_black.png");
     app->normalTexIdx = LoadTexture2D(app,"colo_normal.png");
-    app->magentaTexIdx = LoadTexture2D(app,"colo_magenta.png");
+    app->magentaTexIdx = LoadTexture2D(app,"colo_magenta.png");*/
 
     app->glInfo.glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
     app->glInfo.glRender = reinterpret_cast<const char*>(glGetString(GL_RENDER));
@@ -321,7 +375,30 @@ void Render(App* app)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glViewport(0,0,app->displaySize.x,app->displaySize.y);
+        
+        // Diapo 3-18
+        Program& textureMeshProgram = app->programs[app->texturedMeshProgramIdx];
+        glUseProgram(textureMeshProgram.handle);
 
+        Model& model = app->models[app->Patrick];
+        Mesh& mesh = app->meshes[model.meshIdx];
+
+        for (u32 i = 0; i < mesh.submeshes.size(); ++i)
+        {
+            GLuint vao = FindVAO(mesh, i, textureMeshProgram);
+            glBindVertexArray(vao);
+
+            u32 submeshMaterialIdx = model.materialIdx[i];
+            Material& submeshMaterial = app->materials[submeshMaterialIdx];
+
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D,app->textures[submeshMaterial.albedoTextureIdx].handle);
+            glUniform1i(glGetUniformLocation(textureMeshProgram.handle,"uTexture"),0);
+
+            Submesh& submesh = mesh.submeshes[i];
+            glDrawElements(GL_TRIANGLES,submesh.indices.size(), GL_UNSIGNED_INT,(void*)(u64)submesh.indexOffset);
+        }
+        //
         Program& programaTextureGeometry = app->programs[app->texturedGeometryProgramIdx];
         glUseProgram(programaTextureGeometry.handle);
         glBindVertexArray(app->vao);

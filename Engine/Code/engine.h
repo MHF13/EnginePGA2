@@ -96,9 +96,9 @@ struct VertexBufferLayout
 // Shader
 struct VertexShaderAttribute
 {
-    std::string attributeName;
+    GLchar attributeName;
     GLsizei attributeNameLength;
-    GLuint attributeSize;
+    GLint attributeSize;
     GLenum attributeType;
 
     u8 attributeLocation;
@@ -186,6 +186,9 @@ struct App
     u32 blackTexIdx;
     u32 normalTexIdx;
     u32 magentaTexIdx;
+
+    // Model
+    u32 Patrick;
 
     // Mode
     Mode mode;

@@ -1,23 +1,27 @@
 ﻿  engine.cpp
 C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(72,24): error C3646: 'vertexInputLayout': unknown override specifier
 C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(72,41): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(321,39): error C3861: 'LoadTexture2D': identifier not found
-C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(328,41): error C3861: 'LoadTexture2D': identifier not found
-C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(335,41): error C3861: 'LoadTexture2D': identifier not found
-C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(342,39): error C3861: 'LoadTexture2D': identifier not found
-C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(349,37): error C3861: 'LoadTexture2D': identifier not found
-C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.cpp(230,24): error C2039: 'vertexInputLayout': is not a member of 'Program'
+C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(329,39): error C3861: 'LoadTexture2D': identifier not found
+C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(336,41): error C3861: 'LoadTexture2D': identifier not found
+C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(343,41): error C3861: 'LoadTexture2D': identifier not found
+C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(350,39): error C3861: 'LoadTexture2D': identifier not found
+C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(357,37): error C3861: 'LoadTexture2D': identifier not found
+C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.cpp(219,37): error C2039: 'vertexInputLayout': is not a member of 'Program'
 C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(66): message : see declaration of 'Program'
-C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.cpp(231,24): error C2039: 'vertexInputLayout': is not a member of 'Program'
+C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.cpp(225,29): error C2039: 'vertexInputLayout': is not a member of 'Program'
+C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(66): message : see declaration of 'Program'
+C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.cpp(301,24): error C2039: 'vertexInputLayout': is not a member of 'Program'
+C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(66): message : see declaration of 'Program'
+C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.cpp(302,24): error C2039: 'vertexInputLayout': is not a member of 'Program'
 C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(66): message : see declaration of 'Program'
   platform.cpp
 C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(72,24): error C3646: 'vertexInputLayout': unknown override specifier
 C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(72,41): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
-C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(321,39): error C3861: 'LoadTexture2D': identifier not found
-C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(328,41): error C3861: 'LoadTexture2D': identifier not found
-C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(335,41): error C3861: 'LoadTexture2D': identifier not found
-C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(342,39): error C3861: 'LoadTexture2D': identifier not found
-C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(349,37): error C3861: 'LoadTexture2D': identifier not found
+C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(329,39): error C3861: 'LoadTexture2D': identifier not found
+C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(336,41): error C3861: 'LoadTexture2D': identifier not found
+C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(343,41): error C3861: 'LoadTexture2D': identifier not found
+C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(350,39): error C3861: 'LoadTexture2D': identifier not found
+C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\engine.h(357,37): error C3861: 'LoadTexture2D': identifier not found
 C:\Users\mariohf\Documents\GitHub\EnginePGA\EnginePGA\Engine\Code\platform.cpp(42,36): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
           with
           [
