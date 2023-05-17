@@ -5,35 +5,32 @@
 
 #if defined(VERTEX) ///////////////////////////////////////////////////
 
-layout(location=0) in vec3 aPosition:
-layout(location=1) in vec2 aPosition:
+// TODO: Write your vertex shader here
+layout(location = 0) in vec3 aPosition;
+layout(location = 1) in vec2 aTexCoord;
 
-out vec2 vTexCoord;
+out vec2 vTexCoords;
 
 void main()
 {
-	vTexCoord = aTexCoord;
-
-	float clippingScale = 5.0;
-
-	gl_Position = vec4(aPosition, clippingScale);
-
-	gl_Position.z = -gl_Position.z;
+	gl_Position = vec4(aPosition, 1);
+	vTexCoords = aTexCoord;
 }
 
 #elif defined(FRAGMENT) ///////////////////////////////////////////////
 
 // TODO: Write your fragment shader here
 
-in vec2 vTexCoord;
+layout(location = 0) uniform sampler2D uTexture;
 
-uniform sampler2D uTexture;
+in vec2 vTexCoords;
 
-layout(location = 0) out vec4 oColor;
+layout(location = 0) out vec4 fragColor;
 
 void main()
 {
-	oColor = texture(uTexture, vTexCoord);
+	fragColor = texture(uTexture, vTexCoords);
+	//fragColor = vec4(1,0,0,1);
 }
 
 #endif
